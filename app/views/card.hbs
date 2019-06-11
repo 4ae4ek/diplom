@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Diplom</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <div id="wrapper">
+
+      <div id="header">
+            <div class="inner">
+            <a href="/main" class="logo">BioMark</a>
+
+
+            <nav id="nav">
+          <a href="/main"  style="">Главная</a>
+          <a href="/worker"  style="">Работники</a>
+          <a href="/logout"  style="">Выйти</a>
+
+
+
+         </nav>
+       </div>
+
+               <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
+            Меню
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <button type="button"  data-toggle="modal" data-target="#exampleModal" style="border: 10px; border-radius: 15px;  ">добавить пациента</button>
+            <button type="button"  data-toggle="modal" data-target="#exampleModal1" style="border: 10px; border-radius: 15px;  ">служба поддержки</button>
+            <form action="/graf">
+               <button type="submit"  href="/graf" style="border: 10px; border-radius: 15px;  ">Графики температуры</button>
+            </form>
+            </div>
+        </div>
+
+        
+      </div>
+      <div id="content">
+        <div id="inner-content" >
+
+          
+         <div class="row mb-4">
+
+        <div class="col">
+            <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
+          <div class="card" style="border-radius: 15px;">
+          <div class="card-body">
+        <img src="https://st.depositphotos.com/1008939/1880/i/450/depositphotos_18807295-stock-photo-portrait-of-handsome-man.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
+        <button type="button"  data-toggle="modal" data-target="#exampleModal3" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
+                  Открыть карточку пациента {{# items}} {{FIO}} {{/items}}
+                  </button>
+      </div>
+      </div>
+    </div>
+</div>
+
+
+        <div class="col">
+          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
+          <div class="card" style="border-radius: 15px;">
+        <div class="card-body">
+       <img src="https://st.depositphotos.com/1424188/1365/i/450/depositphotos_13653328-stock-photo-handsome-caucasian-man-blue-eyes.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
+                
+                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
+                  Открыть карточку пациента {{# items2}} {{FIO}} {{/items2}}
+                  </button>
+      </div>
+      </div>
+      </div>
+</div>
+
+
+        <div class="col">
+          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
+          <div class="card" style="border-radius: 15px;">
+          <div class="card-body">
+       <img src="https://us.123rf.com/450wm/heckmannoleg/heckmannoleg1508/heckmannoleg150800024/44154574-beautiful-woman-face-perfect-makeup-beauty-fashion-eyelashes-cosmetic-eyeshadow-highlighting.jpg?ver=6"width="100%" height="100%"  alt="..." style="border-radius: 15px;">
+                
+                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
+                  Открыть карточку пациента Гермиона Грейнджер
+                  </button>
+      </div>
+      </div>
+      </div>
+</div>
+
+
+
+        <div class="col">
+          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
+          <div class="card" style="border-radius: 15px;">
+        <div class="card-body">
+       <img src="https://www.meme-arsenal.com/memes/29b275a618cd1ea2f51cf6e004cb118e.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
+                
+                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
+                  Открыть карточку пациента Тор всемогущий
+                  </button>
+      </div>
+      </div>
+        
+    </div>
+</div>
+
+     {{# suck}}
+
+        <div  style="color:Black;"> ФИО: {{ Tempo }} </div>
+     
+     {{/suck}}
+       
+        </div>
+      </div>
+
+
+    </div>
+
+    <div>
+      
+              <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Служба поддержки</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                      <form>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Ф.И.О.</label>
+                          <input type="text" class="form-control"  a placeholder="Введите свое ФИО">
+                        </div>
+                        <div class="form-group">
+                         <label for="exampleInputEmail1">Email</label>
+                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Пожалуйста введите email для обратной связи">
+                        </div>
+                        <div>
+                          <label for="exampleInputEmail1">Тема обращения</label>
+                          <input type="text" class="form-control"  a placeholder="Введите тему обращения">
+                        </div>
+                        <div>
+                          <label for="exampleInputPassword1">Описание</label>
+                          <input type="text" class="form-control"  placeholder="Пожалуйста опишите свою проблему">
+                        </div>
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                          <label class="form-check-label" for="exampleCheck1">Я соглашаюсь на обработку своих данных</label>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Отправить</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Графики температуры</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                     <canvas id="myChart2"></canvas>
+                     <canvas id="myChart"></canvas>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+
+
+                    <div class="modal-header">ФИО: {{ this.FIO }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                      <section class="get">
+                        {{# each items2 }}
+                          <article class="items" style="">
+                              <div  style="color:Black;">ФИО: {{ this.FIO }}</div>
+                              <div  style="color:Black;">Дата рождения: {{ this.Datebirthday }}</div>
+                              <div  style="color:Black;">Дата госпитализации: {{ this.Dategospital }}</div>
+                              <div  style="color:Black;">Номер датчика: {{ this.Datchik }}</div>
+                              <div  style="color:Black;">История болезни: {{ this.History }}</div>
+                              <div  style="color:Black;">Диагноз: {{ this.Diagnoz }}</div>
+                              <br></br>
+                          </article>
+                        {{/each}}
+                        {{# each good2 }}
+                          <article class="good" style="align-self: left;">
+                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: {{ this.temp1 }}</div> <p> </p>
+                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: {{ this.pulse }}</div>
+                          </article>
+                        {{/each}}
+                      </section>
+                      <canvas id="myChart3"></canvas>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                   <div class="modal-content">
+
+                      <div class="modal-header">ФИО: {{ this.FIO }}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+
+                      <div class="modal-body">
+                          <section class="get">
+                            {{# each items }}
+                              <article class="items" style="">
+                                  <div  style="color:Black;">ФИО: {{ this.FIO }}</div>
+                                  <div  style="color:Black;">Дата рождения: {{ this.Datebirthday }}</div>
+                                  <div  style="color:Black;">Дата госпитализации: {{ this.Dategospital }}</div>
+                                  <div  style="color:Black;">Номер датчика: {{ this.Datchik }}</div>
+                                  <div  style="color:Black;">История болезни: {{ this.History }}</div>
+                                  <div  style="color:Black;">Диагноз: {{ this.Diagnoz }}</div>
+                                  <br></br>
+                              </article>
+                            {{/each}}
+                            {{# each good }}
+                              <article class="good" style="align-self: left;">
+                                  <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: {{ this.temp1 }}</div> <p> </p>
+                                  <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: {{ this.pulse }}</div>
+                              </article>
+                            {{/each}}
+                          </section>
+                          <canvas id="myChart4"></canvas>
+                          
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                      </div>
+
+                      </div>
+                  </div>
+              </div>
+
+
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Данные пациента</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="post" action="/card">
+                        <div class="form-group">
+                          <label for="recipient-name" class="col-form-label">ФИО</label>
+                          <input type="text" class="form-control" id="recipient-name" name="FIO" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="recipient-name" class="col-form-label" >Дата рождения</label>
+                          <input type="date" class="form-control" id="recipient-date" name="Datebirthday">
+                        </div>
+                         <div class="form-group">
+                          <label for="recipient-name" class="col-form-label" >Дата госпитализации</label>
+                          <input type="date" class="form-control" id="recipient-date-gos" name="Dategospital">
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1">Выберите номер датчика</label>
+                            <select class="form-control" id="exampleFormControlSelect1" name="Datchik" required>
+                              <option>1</option>
+                              <option>2</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="message-text" class="col-form-label" >История болезни</label>
+                          <textarea class="form-control" id="message-text" name="History"></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="message-text" class="col-form-label" >Диагноз</label>
+                          <textarea class="form-control" id="message-text" name="Diagnoz"></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                          <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+              </div>
+    </div>
+
+          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+              <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+               
+  <script>
+                                var temperature1 = 36.6, 
+                 temperature2 = 36.7,
+                  temperature3 = 36.6,
+                   temperature4= 36.8,
+                    temperature5= 36.7,
+                   temperature6= 36.9,
+                   temperature7= 37.1,
+                    temperature8= 36.9,
+                   temperature9= 37.2,
+                   temperature10= 37.4,
+                   temperature11= 37.8,
+                   temperature12= 38.1,
+                   temperature13= 37.8,
+                   temperature14 = 37.4,
+                  temperature15= 37.1,
+                 temperature16= 36.9,
+                  temperature17= 36.8,
+                   temperature18= 36.7,
+                   temperature19= 36.6,
+                  temperature20= 36.6,
+                   temperature21= 36.6,
+                   temperature22= 36.7,
+                   temperature23= 36.6,
+                   temperature24= 36.6;
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['00:30', '01:00', '01:30', '02:00', '02:30', '03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30', '12:00'],
+        datasets: [{
+            label: 'Сиркин Никита Аслексеевич',
+             backgroundColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+            data: [temperature1, temperature2, temperature3, temperature4, temperature5, temperature6, temperature7, temperature8, temperature9, temperature10, temperature11, temperature12, temperature13, temperature14, temperature15, temperature16, temperature17, temperature18, temperature19, temperature20, temperature21, temperature22, temperature23, temperature24]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+  </script>
+
+
+   <script > 
+     var temperature25= 27.5,
+                    temperature26= 27.5,
+                   temperature27= 27.6,
+                   temperature28= 27.6,
+                  temperature29= 27.6,
+                 temperature30= 27.7,
+                  temperature31= 27.7,
+                   temperature32= 27.7,
+                   temperature33= 27.8,
+                   temperature34= 27.8,
+                    temperature35= 27.9,
+                   temperature36= 27.9;
+
+        var ctx = document.getElementById('myChart2').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'],
+        datasets: [{
+            label: 'Строкин Никита Александрович',
+            backgroundColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+
+            data: [temperature25, temperature26, temperature27, temperature28, temperature29, temperature30, temperature31, temperature32,temperature33, temperature34, temperature35, temperature36]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+             
+  <script>
+              var temperature1 = 36.6, 
+                 temperature2 = 36.7,
+                  temperature3 = 36.6,
+                   temperature4= 36.8,
+                    temperature5= 36.7,
+                   temperature6= 36.9,
+                   temperature7= 37.1,
+                    temperature8= 36.9,
+                   temperature9= 37.2,
+                   temperature10= 37.4,
+                   temperature11= 37.8,
+                   temperature12= 38.1,
+                   temperature13= 37.8,
+                   temperature14 = 37.4,
+                  temperature15= 37.1,
+                 temperature16= 36.9,
+                  temperature17= 36.8,
+                   temperature18= 36.7,
+                   temperature19= 36.6,
+                  temperature20= 36.6,
+                   temperature21= 36.6,
+                   temperature22= 36.7,
+                   temperature23= 36.6,
+                   temperature24= 36.6;
+
+        var ctx = document.getElementById('myChart3').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['00:30', '01:00', '01:30', '02:00', '02:30', '03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30', '12:00'],
+        datasets: [{
+            label: 'Сиркин Никита Аслексеевич',
+            backgroundColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+
+            data: [temperature1, temperature2, temperature3, temperature4, temperature5, temperature6, temperature7, temperature8, temperature9, temperature10, temperature11, temperature12, temperature13, temperature14, temperature15, temperature16, temperature17, temperature18, temperature19, temperature20, temperature21, temperature22, temperature23, temperature24]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+  </script>
+
+
+   <script > 
+     var temperature25= 27.5,
+                    temperature26= 27.5,
+                   temperature27= 27.6,
+                   temperature28= 27.6,
+                  temperature29= 27.6,
+                 temperature30= 27.7,
+                  temperature31= 27.7,
+                   temperature32= 27.7,
+                   temperature33= 27.8,
+                   temperature34= 27.8,
+                    temperature35= 27.9,
+                   temperature36= 27.9;
+
+        var ctx = document.getElementById('myChart4').getContext('2d');
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'],
+        datasets: [{
+            label: 'Строкин Никита Александрович',
+            backgroundColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                'rgba(150, 0, 31, 02)',
+                
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)',
+                'rgba(255, 99, 132, 02)'
+            ],
+
+            data: [temperature25, temperature26, temperature27, temperature28, temperature29, temperature30, temperature31, temperature32,temperature33, temperature34, temperature35, temperature36]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script >
+  $(function() {
+  
+      var jok;
+
+    {{Tempo}} = jok; 
+
+
+            const socket = io('/card');
+            socket.on('greed', function(jok) {
+            
+              console.log(jok);
+
+
+            });
+
+  });
+</script>
+  </body>
+</html>

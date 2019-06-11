@@ -1,0 +1,32 @@
+{
+  "name": "Web",
+  "version": "1.0.0",
+  "description": "Диплом",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dem" : "nodemon  server.js"
+  },
+  "author": "Строкин Никита",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "chart.js": "^2.8.0",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^1.3.2",
+    "ejs": "^2.5.1",
+    "express": "^4.14.0",
+    "express-session": "^1.14.0",
+    "hbs": "^4.0.4",
+    "mongoose": "^5.0.17",
+    "nodemailer": "^6.2.1",
+    "nodemon": "^1.19.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "redis": "^2.6.2",
+    "socket.io": "^2.0.3",
+    "socket.io-redis": "^5.1.0",
+    "winston": "^2.2.0",
+    "xoauth2": "^1.2.0"
+  }
+}
