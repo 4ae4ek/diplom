@@ -16,7 +16,6 @@ var logger      = require('./app/logger');
 var mailer      = require('./app/mailer');
 
 
-var port = process.env.PORT || 3000;
 
 
 app.set('views', path.join(__dirname, 'app/views'));
