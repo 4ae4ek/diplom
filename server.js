@@ -16,7 +16,7 @@ var logger      = require('./app/logger');
 var mailer      = require('./app/mailer');
 
 
-var port = proxy.port || 80,
+var port = proxy.port || 80;
 
 
 
