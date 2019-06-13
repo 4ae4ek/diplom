@@ -1,5 +1,7 @@
 'use strict';
 
+var secrot = "asfjaip";
+
 var init = function () {
 
 	if(process.env.NODE_ENV === 'production') {
@@ -7,7 +9,7 @@ var init = function () {
 		var redisPassword 	= redisURI.auth.split(':')[1];
 		return {
 			
-			sessionSecret: process.env."asfjaip",
+			sessionSecret: process.env.secrot,
 			redis: {
 				host: redisURI.hostname,
 				port: redisURI.port,
