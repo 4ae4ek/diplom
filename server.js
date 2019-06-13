@@ -28,7 +28,7 @@ var url = require("url");
 
 var proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
 
-target  = url.parse("http://ip.quotaguard.com/");
+var target  = url.parse("http://mighty-sea-79953.herokuapp.com/");
 
 
 options = {
