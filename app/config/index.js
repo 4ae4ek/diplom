@@ -7,7 +7,7 @@ var init = function () {
 		var redisPassword 	= redisURI.auth.split(':')[1];
 		return {
 			
-			sessionSecret: process.env.asfjaip,
+			sessionSecret: process.env."asfjaip",
 			redis: {
 				host: redisURI.hostname,
 				port: redisURI.port,

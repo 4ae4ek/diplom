@@ -9,7 +9,7 @@ var config 		= require('../config');
 var init = function () {
 	if(process.env.NODE_ENV === 'production') {
 		return session({
-			secret: asfjaip,
+			secret: "asfjaip",
 			resave: false,
 			saveUninitialized: false,
 			unset: 'destroy',
@@ -17,7 +17,7 @@ var init = function () {
 		});
 	} else {
 		return session({
-			secret: asfjaip,
+			secret: "asfjaip",
 			resave: false,
 			unset: 'destroy',
 			saveUninitialized: true
