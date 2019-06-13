@@ -16,7 +16,8 @@ var logger      = require('./app/logger');
 var mailer      = require('./app/mailer');
 
 
-var port = proxy.port || 80;
+var port = process.env.PORT || 3000;
+
 
 
 
@@ -29,6 +30,7 @@ url = require("url");
 
 proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
 var target  = url.parse("http://ip.quotaguard.com/");
+var hostname = url.parse("http://mighty-sea-79953.herokuapp.com/");
 
 options = {
   hostname: proxy.hostname,
