@@ -62,7 +62,15 @@ var init = function(app){
 
 	var server 	= require('http').Server(app);
 	var io 		= require('socket.io')(server);
+     
+     var http, options, proxy, url;
 
+http = require("http");
+
+url = require("url");
+
+proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
+target  = url.parse("http://ip.quotaguard.com/");
 
 	// Using Redis
 	let port = config.redis.port;
@@ -76,6 +84,22 @@ var init = function(app){
 	io.use((socket, next) => {
 		require('../session')(socket.request, {}, next);
 	});
+
+
+options = {
+  hostname: proxy.hostname,
+  port: proxy.port || 80,
+  path: target.href,
+  headers: {
+    "Proxy-Authorization": "Basic " + (new Buffer(proxy.auth).toString("base64")),
+    "Host" : target.hostname
+  }
+};
+
+http.get(options, function(res) {
+  res.pipe(process.stdout);
+  return console.log("status code", res.statusCode);
+});
 
 	// Define all Events
 	ioEvents(io);
