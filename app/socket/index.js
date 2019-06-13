@@ -92,7 +92,7 @@ options = {
   port: proxy.port || 80,
   path: target.href,
   headers: {
-    "Proxy-Authorization": "Basic " + (new Buffer(proxy.auth).toString("base64")),
+    "Proxy-Authorization": "Basic " + (new Buffer.from(proxy.auth).toString("base64")),
     "Host" : target.hostname
   }
 };
