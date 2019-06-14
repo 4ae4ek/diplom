@@ -19,54 +19,6 @@ var mailer      = require('./app/mailer');
 var port = process.env.PORT || 3000;
 
 
-
-
-
-var http = require("http");
-
-var url = require("url");
-
-var proxy = url.parse(process.env.QUOTAGUARDSTATIC_URL);
-
-var target  = url.parse("http://ip.quotaguard.com/");
-
-
-options = {
-  hostname: proxy.hostname,
-  port: proxy.port || 80,
-  path: target.href,
-  headers: {
-    "Proxy-Authorization": "Basic " + (new Buffer.from(proxy.auth).toString("base64")),
-    "Host" : target.hostname
-  }
-};
-
-http.get(options, function(res) {
-  res.pipe(process.stdout);
-  return console.log("status code", res.statusCode);
-});
-
-
-
-var request = require('request');
-
-var options = {
-    proxy: process.env.QUOTAGUARDSTATIC_URL,
-    url: 'https://api.github.com/repos/joyent/node',
-    headers: {
-        'User-Agent': 'node.js'
-    }
-};
-
-function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
-        console.log(body);
-    }
-}
-
-request(options, callback);
-
-
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
 
