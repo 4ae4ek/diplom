@@ -132,35 +132,35 @@
                     </div>
 
                     <div class="modal-body">
-                      <form>
+                      <form  method="post" action="/mail">
                         <div class="form-group">
                           <label for="exampleInputEmail1">Ф.И.О.</label>
-                          <input type="text" class="form-control"  a placeholder="Введите свое ФИО">
+                          <input type="text" class="form-control" name="FIOmail"  a placeholder="Введите свое ФИО">
                         </div>
                         <div class="form-group">
                          <label for="exampleInputEmail1">Email</label>
-                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Пожалуйста введите email для обратной связи">
+                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="mail" placeholder="Пожалуйста введите email для обратной связи">
                         </div>
                         <div>
                           <label for="exampleInputEmail1">Тема обращения</label>
-                          <input type="text" class="form-control"  a placeholder="Введите тему обращения">
+                          <input type="text" class="form-control" name="theme" a placeholder="Введите тему обращения">
                         </div>
                         <div>
                           <label for="exampleInputPassword1">Описание</label>
-                          <input type="text" class="form-control"  placeholder="Пожалуйста опишите свою проблему">
+                          <input type="text" class="form-control" name="gltext"  placeholder="Пожалуйста опишите свою проблему">
                         </div>
                         <div class="form-check">
                           <input type="checkbox" class="form-check-input" id="exampleCheck1">
                           <label class="form-check-label" for="exampleCheck1">Я соглашаюсь на обработку своих данных</label>
                         </div>
-                      </form>
+                      
                     </div>
 
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal">Отправить</button>
+                      <button type="submit" class="btn btn-primary" >Отправить</button>
                     </div>
-
+                      </form>
                   </div>
                 </div>
               </div>
@@ -315,12 +315,13 @@
                           <label for="message-text" class="col-form-label" >Диагноз</label>
                           <textarea class="form-control" id="message-text" name="Diagnoz"></textarea>
                         </div>
-                      </form>
+                      
                     </div>
                     <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                           <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
+                    </form>
                 </div>
               </div>
     </div>
@@ -722,19 +723,9 @@
     <script >
   $(function() {
   
-      var jok;
-
-    {{Tempo}} = jok; 
 
 
-            const socket = io('/card');
-            socket.on('greed', function(jok) {
-            
-              console.log(jok);
-
-
-            });
-
+  const socket = io('/card');
   });
 </script>
   </body>

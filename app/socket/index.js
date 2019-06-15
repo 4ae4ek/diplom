@@ -30,14 +30,7 @@ var ioEvents = function(io) {
 
 	csp.on('connection', function(socket) {
 
-
-         socket.emit('getdata', {greed : '34,5'});
-            
-         socket.on('greed', function (jok) {
-              console.log(jok);
-         });
-   
-
+  
 
          console.log('connected to card');
 

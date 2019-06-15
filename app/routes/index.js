@@ -8,6 +8,7 @@ var url = 'mongodb://test:testtest1@ds061246.mlab.com:61246/diplomchik';
 
 
 
+
 var User = require('../models/user');
 var Card = require('../models/card');
 var Post = require('../models/post');
@@ -186,6 +187,48 @@ router.post('/card',  [User.isAuthenticated, function(req, res) {
 				})
 			    }
 		});
+
+}]);
+
+
+router.post('/mail',  [User.isAuthenticated, function(req, res) {
+	if(!req.body) return res.sendStatus(400);
+	console.log(req.body);
+ 
+  const nodemailer = require('nodemailer'); 
+
+
+    const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'janelle.schoen76@ethereal.email',
+        pass: 'n6efe7PaHucwUQ6aMu'
+    }
+});
+
+   var message = {
+         
+        from: req.body.mail,
+
+        to: 'Служба поддержки <popka.dj@gmail.com>',
+
+        subject: req.body.theme,
+
+        text: req.body.FIOmail,
+         
+        html: req.body.gltext,
+    };
+
+  var info =  transporter.sendMail(message);
+
+    console.log('Message sent successfully!');
+    console.log(nodemailer.getTestMessageUrl(info));
+
+    transporter.close();
+
+    res.redirect('/card');
+
 }]);
 
 router.get('/main',  [User.isAuthenticated, function(req, res, next) {
