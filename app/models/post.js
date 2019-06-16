@@ -15,8 +15,8 @@ var findById = function (id, callback){
 	postModel.findById(id, callback);
 } 
 
-var findOneAndUpdate = function(timer, data, callback){
-	postModel.findOneAndUpdate(timer, data, { new: true }, callback);
+var findOneAndUpdate = function(ids, data, callback){
+	postModel.findOneAndUpdate(ids, data, { new: true }, callback);
 }
 
 var find = function (data, callback){

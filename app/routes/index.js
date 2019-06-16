@@ -63,37 +63,19 @@ router.post('/register', function(req, res, next) {
 	}
 });
 
-var timer = 0;
-
-var timerCallback = function() {
-   	
-     if (timer<48){
-            timer = timer + 1;
-         }else{
-         	timer = 0;
-         };
-           };
 
 router.get('/temp',  function(req, res) {
-   console.log(req.query);
    
-   var timerId = setInterval(timerCallback.bind(this), 1800000);
-   
-
  
-   var dat = {'temp1': req.query.temp1, 'pulse': req.query.pulse , 'ids': req.query.ids, 'timer' : timer  };
-
-
-
-      
-
-                 
+   var dat = {'temp1': req.query.temp1, 'pulse': req.query.pulse , 'ids': req.query.ids };
+          
               Post.findOne({ 'ids' : req.query.ids},  function(err,  havePost){
               if(err) throw err;
 			  if(havePost){
 
-                   	 Post.findOneAndUpdate({'timer' : timer}, {$set:{ temp1: req.query.temp1, pulse : req.query.pulse}},function(err, posto){
+                   	 Post.findOneAndUpdate({'ids' : req.query.ids}, {$set:{ temp1: req.query.temp1, pulse : req.query.pulse}},function(err, posto){
                       if(err) throw err;
+                      console.log(req.query);
                       res.sendStatus(200);
 			     	 });
 
@@ -119,7 +101,7 @@ router.get('/card',  [User.isAuthenticated, function(req, res, next) {
 
     assert.equal(null, err);
 
-    var Dathiki = db.collection('posts').find({ ids : 1 , timer : timer});
+    var Dathiki = db.collection('posts').find({ ids : 1 });
 
     assert.equal(null, err);
 
@@ -156,6 +138,8 @@ router.get('/card',  [User.isAuthenticated, function(req, res, next) {
     });
 
   });
+
+
 }]);
 
 
@@ -187,6 +171,8 @@ router.post('/card',  [User.isAuthenticated, function(req, res) {
 				})
 			    }
 		});
+
+  
 
 }]);
 

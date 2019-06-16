@@ -103,16 +103,12 @@
       </div>
       </div>
         
-    </div>
-</div>
-
-     {{# suck}}
-
-        <div  style="color:Black;"> ФИО: {{ Tempo }} </div>
-     
-     {{/suck}}
-       
+            </div>
         </div>
+        </div>
+
+   <p id="nope" type="text"></p>
+
       </div>
 
 
@@ -216,7 +212,7 @@
                         {{/each}}
                         {{# each good2 }}
                           <article class="good" style="align-self: left;">
-                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: {{ this.temp1 }}</div> <p> </p>
+                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;" id="tempo">Температура: {{ this.temp1 }}</div>
                               <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: {{ this.pulse }}</div>
                           </article>
                         {{/each}}
@@ -721,12 +717,14 @@
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
     <script src="/socket.io/socket.io.js"></script>
     <script >
-  $(function() {
-  
-
-
   const socket = io('/card');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', data);
+    document.getElementById("tempo").innerHTML = data;
+
   });
+
 </script>
   </body>
 </html>
