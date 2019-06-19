@@ -213,7 +213,7 @@
                         {{# each good2 }}
                           <article class="good" style="align-self: left;">
                               <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;" id="tempo">Температура: {{ this.temp1 }}</div>
-                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: {{ this.pulse }}</div>
+                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;" id="pulso">Пульс: {{ this.pulse }}</div>
                           </article>
                         {{/each}}
                       </section>
@@ -718,10 +718,15 @@
     <script src="/socket.io/socket.io.js"></script>
     <script >
   const socket = io('/card');
-  socket.on('news', function (data) {
+  socket.on('temp.ids2', function (data) {
     console.log(data);
-    socket.emit('my other event', data);
     document.getElementById("tempo").innerHTML = data;
+
+  });
+
+   socket.on('pulse.ids2', function (data) {
+    console.log(data);
+    document.getElementById("pulso").innerHTML = data;
 
   });
 

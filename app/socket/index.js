@@ -44,10 +44,17 @@ var ioEvents = function(io) {
 	var resultArray = [];
 	var resultDat =[];
 	var resultArray2 = [];
-	var resultDat2 =[];
+	var resultDat2 = [];
+    var resultDat2pulse = [];
+
+
+
+
+
+		var timer = setInterval(function () {
 
 	mongo.connect(url, function(err, db) {
-		assert.equal(null, err);
+		
 
     var cursor = db.collection('cards').find({ Datchik : 1 });
 
@@ -63,6 +70,7 @@ var ioEvents = function(io) {
 
     var Dathiki2 = db.collection('posts').find({ ids : 2 }, { _id: false, ids:false, __v: false});
 
+    assert.equal(null, err);
 
 		   cursor.forEach(function(doc, err) {
      assert.equal(null, err);
@@ -77,38 +85,36 @@ var ioEvents = function(io) {
 
     Dathiki.forEach(function(doc, err) {
       assert.equal(null, err);
-       resultDat.push(doc);
+       resultDat2 = (doc.temp1);
+      resultDat2pulse = (doc.pulse);
     });
 
 
   Dathiki2.forEach(function(doc, err) {
       assert.equal(null, err);
-      resultDat2 = (doc.temp1);
+      
     }, function() {
       db.close();
     });
 
 
-
   });
 
+        var datas1 = "Пульс: " + resultDat2pulse;
+
+        socket.emit ( 'pulse.ids2' , datas1);
+
+        console.log(datas1)
+
+		var datas = "Температура: " + resultDat2;
+
+        socket.emit ( 'temp.ids2' , datas);
+
+        console.log(datas)
 
 
 
-		var timer = setInterval(function () {
-
-        var temp1push = resultDat2;
-
-		var datas = "Температура: " + temp1push;
-
-        socket.emit ( 'news' , datas);
-
-		socket.on('my other event', function (data) {
-         	console.log(data);
-         });
-
-
-      }, 2000);
+      }, 3000);
 
 		
 
