@@ -42,86 +42,28 @@
       </div>
       <div id="content">
         <div id="inner-content" >
-
-          
-         <div class="row mb-4">
-
-        <div class="col">
-            <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
-          <div class="card" style="border-radius: 15px;">
-          <div class="card-body">
-        <img src="https://st.depositphotos.com/1008939/1880/i/450/depositphotos_18807295-stock-photo-portrait-of-handsome-man.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
-        <button type="button"  data-toggle="modal" data-target="#exampleModal3" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
-                  Открыть карточку пациента {{# items}} {{FIO}} {{/items}}
-                  </button>
-      </div>
-      </div>
-    </div>
-</div>
-
-
-        <div class="col">
-          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
-          <div class="card" style="border-radius: 15px;">
-        <div class="card-body">
-       <img src="https://st.depositphotos.com/1424188/1365/i/450/depositphotos_13653328-stock-photo-handsome-caucasian-man-blue-eyes.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
-                
-                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
-                  Открыть карточку пациента {{# items2}} {{FIO}} {{/items2}}
-                  </button>
-      </div>
-      </div>
-      </div>
-</div>
-
-
-        <div class="col">
-          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
-          <div class="card" style="border-radius: 15px;">
-          <div class="card-body">
-       <img src="https://us.123rf.com/450wm/heckmannoleg/heckmannoleg1508/heckmannoleg150800024/44154574-beautiful-woman-face-perfect-makeup-beauty-fashion-eyelashes-cosmetic-eyeshadow-highlighting.jpg?ver=6"width="100%" height="100%"  alt="..." style="border-radius: 15px;">
-                
-                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
-                  Открыть карточку пациента Гермиона Грейнджер
-                  </button>
-      </div>
-      </div>
-      </div>
-</div>
-
-
-
-        <div class="col">
-          <div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">
-          <div class="card" style="border-radius: 15px;">
-        <div class="card-body">
-       <img src="https://www.meme-arsenal.com/memes/29b275a618cd1ea2f51cf6e004cb118e.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">
-                
-                  <button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">
-                  Открыть карточку пациента Тор всемогущий
-                  </button>
-      </div>
-      </div>
-        
+          <div class="row mb-4" >
+            <div class="col" id="carto"> 
             </div>
-        </div>
-        </div>
-
-   <p id="nope" type="text"></p>
-
+            <div class="col" id="carto2">
+            </div>
+          </div>
       </div>
 
 
     </div>
 
     <div>
+
+              <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              </div>
       
               <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
 
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Служба поддержки</h5>
+                      <h5 class="modal-title" id="exampleModalLabel" style="margin-top: 30px;">Служба поддержки</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -185,99 +127,14 @@
                 </div>
               </div>
 
-
               <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-
-
-                    <div class="modal-header">ФИО: {{ this.FIO }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    <div class="modal-body">
-                      <section class="get">
-                        {{# each items2 }}
-                          <article class="items" style="">
-                              <div  style="color:Black;">ФИО: {{ this.FIO }}</div>
-                              <div  style="color:Black;">Дата рождения: {{ this.Datebirthday }}</div>
-                              <div  style="color:Black;">Дата госпитализации: {{ this.Dategospital }}</div>
-                              <div  style="color:Black;">Номер датчика: {{ this.Datchik }}</div>
-                              <div  style="color:Black;">История болезни: {{ this.History }}</div>
-                              <div  style="color:Black;">Диагноз: {{ this.Diagnoz }}</div>
-                              <br></br>
-                          </article>
-                        {{/each}}
-                        {{# each good2 }}
-                          <article class="good" style="align-self: left;">
-                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;" id="tempo">Температура: {{ this.temp1 }}</div>
-                              <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;" id="pulso">Пульс: {{ this.pulse }}</div>
-                          </article>
-                        {{/each}}
-                      </section>
-                      <canvas id="myChart3"></canvas>
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    </div>
-
-
-                  </div>
-                </div>
               </div>
-
-
-              <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                   <div class="modal-content">
-
-                      <div class="modal-header">ФИО: {{ this.FIO }}</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-
-                      <div class="modal-body">
-                          <section class="get">
-                            {{# each items }}
-                              <article class="items" style="">
-                                  <div  style="color:Black;">ФИО: {{ this.FIO }}</div>
-                                  <div  style="color:Black;">Дата рождения: {{ this.Datebirthday }}</div>
-                                  <div  style="color:Black;">Дата госпитализации: {{ this.Dategospital }}</div>
-                                  <div  style="color:Black;">Номер датчика: {{ this.Datchik }}</div>
-                                  <div  style="color:Black;">История болезни: {{ this.History }}</div>
-                                  <div  style="color:Black;">Диагноз: {{ this.Diagnoz }}</div>
-                                  <br></br>
-                              </article>
-                            {{/each}}
-                            {{# each good }}
-                              <article class="good" style="align-self: left;">
-                                  <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: {{ this.temp1 }}</div> <p> </p>
-                                  <div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: {{ this.pulse }}</div>
-                              </article>
-                            {{/each}}
-                          </section>
-                          <canvas id="myChart4"></canvas>
-                          
-                      </div>
-
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                      </div>
-
-                      </div>
-                  </div>
-              </div>
-
 
               <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Данные пациента</h5>
+                      <h5 class="modal-title" id="exampleModalLabel" style="margin-top: 30px;">Данные пациента</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -718,17 +575,24 @@
     <script src="/socket.io/socket.io.js"></script>
     <script >
   const socket = io('/card');
-  socket.on('temp.ids2', function (data) {
-    console.log(data);
-    document.getElementById("tempo").innerHTML = data;
 
+  socket.on('carto', function (data) {
+    document.getElementById("carto").innerHTML = data;
   });
 
-   socket.on('pulse.ids2', function (data) {
-    console.log(data);
-    document.getElementById("pulso").innerHTML = data;
-
+  socket.on('cartomodal', function (data) {
+    document.getElementById("exampleModal4").innerHTML = data;
   });
+     socket.on('cartomodal2', function (data) {
+    document.getElementById("exampleModal3").innerHTML = data;
+  });
+
+  socket.on('carto2', function (data) {
+    document.getElementById("carto2").innerHTML = data;
+  });
+
+
+
 
 </script>
   </body>

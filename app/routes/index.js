@@ -89,57 +89,8 @@ router.get('/temp',  function(req, res) {
 });
 
 router.get('/card',  [User.isAuthenticated, function(req, res, next) {
-	var resultArray = [];
-	var resultDat =[];
-	var resultArray2 = [];
-	var resultDat2 =[];
 
-	mongo.connect(url, function(err, db) {
-		assert.equal(null, err);
-
-    var cursor = db.collection('cards').find({ Datchik : 1 });
-
-    assert.equal(null, err);
-
-    var Dathiki = db.collection('posts').find({ ids : 1 });
-
-    assert.equal(null, err);
-
-    var cursor2 = db.collection('cards').find({ Datchik : 2 });
-
-    assert.equal(null, err);
-
-    var Dathiki2 = db.collection('posts').find({ ids : 2 });
-
-
-		   cursor.forEach(function(doc, err) {
-     assert.equal(null, err);
-       resultArray.push(doc);
-    });
-
-
- cursor2.forEach(function(doc, err) {
-     assert.equal(null, err);
-       resultArray2.push(doc);
-    });
-
-    Dathiki.forEach(function(doc, err) {
-      assert.equal(null, err);
-       resultDat.push(doc);
-    });
-
-
-  Dathiki2.forEach(function(doc, err) {
-      assert.equal(null, err);
-       resultDat2.push(doc);
-    }, function() {
-      db.close();
-      res.render('card.hbs', {good: resultDat, items: resultArray, good2: resultDat2, items2: resultArray2 });
-    });
-
-  });
-
-
+    res.render('card.hbs');
 }]);
 
 
@@ -148,72 +99,69 @@ router.post('/card',  [User.isAuthenticated, function(req, res) {
 	console.log(req.body);
  
  var dani = {'FIO': req.body.FIO, 'Datebirthday': req.body.Datebirthday,
-  'Dategospital': req.body.Dategospital, 'Datchik': req.body.Datchik, 
-  'History': req.body.History, 'Diagnoz': req.body.Diagnoz  };
-   
-  Card.findOne({'FIO': new RegExp('^' + req.body.FIO + '$', 'i')},  function(err,  card){
-			if(err) throw err;
-			if(card){
-				res.send('Карточка с данным ФИО уже была создана');
-				res.redirect('/card');
-			}else{
-				Card.findOne({'Datchik': (req.body.Datchik)},  function(err,  dat){
-                if(err) throw err;
-			 if(dat){
-				res.send('Данный датчик уже занят');
-				res.redirect('/card');
-			}else{
-				Card.create(dani, function(err, newCard){
-					if(err) throw err;
-					res.redirect('/card');
-				});
-			} 
-				})
-			    }
-		});
-
-  
-
+    'Dategospital': req.body.Dategospital, 'Datchik': req.body.Datchik, 
+    'History': req.body.History, 'Diagnoz': req.body.Diagnoz  };
+     
+    Card.findOne({'FIO': new RegExp('^' + req.body.FIO + '$', 'i')},  function(err,  card){
+  			if(err) throw err;
+  			if(card){
+  				res.send('Карточка с данным ФИО уже была создана');
+  				res.redirect('/card');
+  			}else{
+  				Card.findOne({'Datchik': (req.body.Datchik)},  function(err,  dat){
+                  if(err) throw err;
+  			 if(dat){
+  				res.send('Данный датчик уже занят');
+  				res.redirect('/card');
+  			}else{
+  				Card.create(dani, function(err, newCard){
+  					if(err) throw err;
+  					res.redirect('/card');
+  				});
+  			} 
+  				})
+  			    }
+  		});
 }]);
 
 
 router.post('/mail',  [User.isAuthenticated, function(req, res) {
-	if(!req.body) return res.sendStatus(400);
-	console.log(req.body);
- 
-  const nodemailer = require('nodemailer'); 
+    	if(!req.body) return res.sendStatus(400);
+    	console.log(req.body);
+     
+      const nodemailer = require('nodemailer'); 
 
 
-    const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-        user: 'janelle.schoen76@ethereal.email',
-        pass: 'n6efe7PaHucwUQ6aMu'
-    }
-});
+        const transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        auth: {
+            user: 'janelle.schoen76@ethereal.email',
+            pass: 'n6efe7PaHucwUQ6aMu'
+        }
+          });
 
-   var message = {
-         
-        from: req.body.mail,
+       var message = {
+             
+            from: req.body.mail,
 
-        to: 'Служба поддержки <popka.dj@gmail.com>',
+            to: 'Служба поддержки <popka.dj@gmail.com>',
 
-        subject: req.body.theme,
+            subject: req.body.theme,
 
-        text: req.body.FIOmail,
-         
-        html: req.body.gltext,
-    };
+            text: req.body.FIOmail,
+             
+            html: req.body.gltext,
+        };
 
-  var info =  transporter.sendMail(message);
+      var info =  transporter.sendMail(message);
 
-    console.log('Message sent successfully!');
-    console.log(nodemailer.getTestMessageUrl(info));
+        console.log('Message sent successfully!');
+        console.log(nodemailer.getTestMessageUrl(info));
 
-    transporter.close();
+        transporter.close();
 
-    res.redirect('/card');
+        res.redirect('/card');
 
 }]);
 
@@ -229,7 +177,7 @@ router.get('/graf',  [User.isAuthenticated, function(req, res, next) {
 router.get('/worker',  [User.isAuthenticated, function(req, res, next) {
     var resultUsersddf = [];
     var resultUsers4aek = [];
-	mongo.connect(url, function(err, db) {
+	   mongo.connect(url, function(err, db) {
 		assert.equal(null, err);
     var cursorUsersddf = db.collection('users').find({ username : "ddf" });
     var cursorUsers4aek = db.collection('users').find({ username : "4aek" });
@@ -240,14 +188,14 @@ router.get('/worker',  [User.isAuthenticated, function(req, res, next) {
        resultUsers4aek.push(doc);
     });
 
-	cursorUsersddf.forEach(function(doc, err) {
-     assert.equal(null, err);
-       resultUsersddf.push(doc);
-    }, function() {
-      db.close();
-      res.render('worker.hbs', { us : resultUsersddf, us2 : resultUsers4aek });
+  	cursorUsersddf.forEach(function(doc, err) {
+       assert.equal(null, err);
+         resultUsersddf.push(doc);
+      }, function() {
+        db.close();
+        res.render('worker.hbs', { us : resultUsersddf, us2 : resultUsers4aek });
+      });
     });
-  });
 }]);
 
 
