@@ -97,7 +97,7 @@ var ioEvents = function (io) {
                     '<div class="card" style="border-radius: 15px;">' +
                     '<div class="card-body">' +
                     '<img src="https://st.depositphotos.com/1008939/1880/i/450/depositphotos_18807295-stock-photo-portrait-of-handsome-man.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">' +
-                    '<button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">' +
+                    '<button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px; margin-top: 1.5rem; align-items: center; display: flex;">' +
                     'Открыть карточку пациента ' + resultArray +
                     '</button>' +
                     '</div>' +
@@ -109,6 +109,7 @@ var ioEvents = function (io) {
             }
 
             socket.emit('carto', datas4);
+
 
             var datas5 =
                 '<div class="modal-dialog" role="document">' +
@@ -153,7 +154,7 @@ var ioEvents = function (io) {
                     '<div class="card" style="border-radius: 15px;">' +
                     '<div class="card-body">' +
                     '<img src="https://st.depositphotos.com/1424188/1365/i/450/depositphotos_13653328-stock-photo-handsome-caucasian-man-blue-eyes.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">' +
-                    '<button type="button"  data-toggle="modal" data-target="#exampleModal3" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px;">' +
+                    '<button type="button"  data-toggle="modal" data-target="#exampleModal3" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px; margin-top: 1.5rem; align-items: center; display: flex;">' +
                     'Открыть карточку пациента ' + resultArray2 +
                     '</button>' +
                     '</div>' +
@@ -201,7 +202,7 @@ var ioEvents = function (io) {
                 '</div>' +
                 '</div>';
             socket.emit('cartomodal2', datas1);
-        }, 500);
+        }, 5000);
 
         console.log('connected to card');
         socket.on('disconnect', function () {
