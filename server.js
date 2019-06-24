@@ -39,4 +39,6 @@ app.use(function(req, res, next) {
   res.status(404).sendFile(process.cwd() + '/app/views/404.htm');
 });
 
+// Handlebars.registerPartial('header', Handlebars.compile($('#header').html()));
+
 ioServer.listen(port);
