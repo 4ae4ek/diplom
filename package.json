@@ -18,7 +18,7 @@
     "express": "^4.14.0",
     "express-session": "^1.14.0",
     "hbs": "^4.0.4",
-    "mongoose": "^5.0.17",
+    "mongoose": "^5.7.5",
     "nodemailer": "^6.2.1",
     "nodemon": "^1.19.1",
     "passport": "^0.3.2",
