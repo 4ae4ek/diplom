@@ -1,0 +1,35 @@
+# Используем официальный образ Node.js
+FROM node:18-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Устанавливаем зависимости для разработки
+RUN apk add --no-cache git
+
+# Копируем файлы зависимостей
+COPY package*.json ./
+
+# Устанавливаем все зависимости (включая devDependencies)
+RUN npm install
+
+# Копируем исходный код (исключаем node_modules и другие ненужные файлы)
+COPY app/ ./app/
+COPY public/ ./public/
+COPY server.js ./
+COPY nodemon.json ./
+COPY .env* ./
+
+# Создаем пользователя для безопасности
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S biomark -u 1001
+
+# Меняем владельца файлов
+RUN chown -R biomark:nodejs /app
+USER biomark
+
+# Открываем порты
+EXPOSE 3000 9229
+
+# Запускаем в режиме разработки
+CMD ["npm", "run", "dev"]

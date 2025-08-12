@@ -1,22 +1,35 @@
-'use strict';
+import winston from 'winston';
+import { config } from '../config/index.js';
 
-var winston = require('winston');
-
-var logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.File)({
-            level: 'debug',
-            json: true,
-            filename: './debug.log',
-            handleExceptions: true
-        }),
-        new (winston.transports.Console)({
-            level: 'debug',
-            json: true,
-            handleExceptions: true
-        })
-    ],
-    exitOnError: false
+const logger = winston.createLogger({
+  level: config.logger.level,
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'biomark-monitoring' },
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  ]
 });
 
-module.exports = logger;
+// Если не продакшн, то логируем в консоль
+if (config.nodeEnv !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple(),
+      winston.format.printf(({ level, message, timestamp }) => {
+        return `${timestamp} [${level}]: ${message}`;
+      })
+    ),
+    level: config.logger.level
+  }));
+}
+
+export { logger };
+export default logger;

@@ -1,13 +1,27 @@
-'use strict';
+import mongoose from 'mongoose';
 
-var Mongoose = require('mongoose');
-
-var PostSchema = new Mongoose.Schema({
-    ids: {type: Number,},
-    temp1: {type: String, default: null},
-    pulse: {type: Number, default: null}
+const PostSchema = new mongoose.Schema({
+  ids: { 
+    type: Number,
+    required: true,
+    unique: true
+  },
+  temp1: { 
+    type: String, 
+    default: null 
+  },
+  pulse: { 
+    type: Number, 
+    default: null,
+    min: 0,
+    max: 300
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-var postModel = Mongoose.model('post', PostSchema);
+const postModel = mongoose.model('post', PostSchema);
 
-module.exports = postModel;
+export default postModel;

@@ -1,60 +1,478 @@
 <!DOCTYPE html>
-<html >
-  <head>
+<html lang="ru">
+<head>
     <meta charset="UTF-8">
-    <title>Diplom</title>
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-  <body>
-    <div class="login-page">
-      <div class="form">
-
-        <div style="margin-top: 18px;">
-            <form action="/register" class="register-form" method="post" >
-              <input type="text" name="username" placeholder="Имя пользователя"/>
-              <input type="password" name="password" placeholder="Пароль"/>
-              <input type="text" name="FIO" placeholder="ФИО"/>
-              <input type="text" name="Rang" placeholder="Должность"/>
-              <button type="submit">Создать</button>
-              <p class="message" >Уже зарегестрированы? <a href="#"  style=" color: #b47add;">Войти</a></p>
-              <% if (errors != null && showRegisterForm != null && showRegisterForm === true) { %>
-                <% errors.forEach(function(err){ %>
-                  <p class="message error"><%= err %></p>
-                <% }); %>
-              <% } %>
-            </form>
-            <form action="/login" class="login-form" method="post">
-              <input type="text" name="username" placeholder="Имя пользователя"/>
-              <input type="password" name="password" placeholder="Пароль"/>
-              <button type="submit">Войти</button>
-              <p class="message" >Не зарегестрированы? <a href="#" style=" color: #b47add;">Создать аккаунт</a></p>
-              <% if (errors != null && showRegisterForm == null) { %>
-                <% errors.forEach(function(err){ %>
-                  <p class="message error"><%= err %></p>
-                <% }); %>
-              <% } if (success != null && showRegisterForm == null) { %>
-                <p class="message success"><%= success %></p>
-              <% } %>
-            </form>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioMark - Система мониторинга</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .login-header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        
+        .login-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .login-body {
+            padding: 30px;
+        }
+        
+        .form-floating {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .form-switch {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+        }
+        
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .toggle-form a:hover {
+            color: #764ba2;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .test-credentials {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .test-credentials h6 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .test-credentials p {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-success:disabled {
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            color: white;
+        }
+        
+        .btn-warning:disabled {
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .alert-sm {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2><i class="fas fa-heartbeat me-2"></i>BioMark</h2>
+                <p>Система мониторинга медицинских показателей</p>
+            </div>
+            
+            <div class="login-body">
+                <!-- Форма входа -->
+                <div class="form-section active" id="loginForm">
+                    <form action="/login" method="post">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Имя пользователя" required>
+                            <label for="loginUsername"><i class="fas fa-user me-2"></i>Имя пользователя</label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Пароль" required>
+                            <label for="loginPassword"><i class="fas fa-lock me-2"></i>Пароль</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Войти в систему
+                        </button>
+                    </form>
+                    
+                    <div class="toggle-form">
+                        <a href="#" onclick="toggleForm('register')">
+                            <i class="fas fa-user-plus me-1"></i>Создать новый аккаунт
+                        </a>
+                    </div>
+                    
+                    <!-- Тестовые данные -->
+                    <div class="test-credentials">
+                        <h6><i class="fas fa-info-circle me-1"></i>Тестовые данные:</h6>
+                        <p><strong>Логин:</strong> admin</p>
+                        <p><strong>Пароль:</strong> admin123</p>
+                        <button id="addTestDataBtn" class="btn btn-success btn-sm mt-2">
+                            <i class="fas fa-database me-1"></i>Добавить тестовые данные
+                        </button>
+                        <button id="resetTestDataBtn" class="btn btn-warning btn-sm mt-2 ms-2">
+                            <i class="fas fa-refresh me-1"></i>Пересоздать данные
+                        </button>
+                        <div id="testDataStatus" class="mt-2" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <!-- Форма регистрации -->
+                <div class="form-section" id="registerForm">
+                    <form action="/register" method="post">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="regUsername" name="username" placeholder="Имя пользователя" required>
+                            <label for="regUsername"><i class="fas fa-user me-2"></i>Имя пользователя</label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="regPassword" name="password" placeholder="Пароль" required>
+                            <label for="regPassword"><i class="fas fa-lock me-2"></i>Пароль</label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="regFIO" name="FIO" placeholder="ФИО" required>
+                            <label for="regFIO"><i class="fas fa-id-card me-2"></i>ФИО</label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="regRang" name="Rang" placeholder="Должность" required>
+                            <label for="regRang"><i class="fas fa-user-md me-2"></i>Должность</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Создать аккаунт
+                        </button>
+                    </form>
+                    
+                    <div class="toggle-form">
+                        <a href="#" onclick="toggleForm('login')">
+                            <i class="fas fa-sign-in-alt me-1"></i>Уже есть аккаунт? Войти
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Сообщения об ошибках и успехе -->
+                <% if (errors && errors.length > 0) { %>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <% errors.forEach(function(err){ %>
+                            <%= err %><br>
+                        <% }); %>
+                    </div>
+                <% } %>
+                
+                <% if (success) { %>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <%= success %>
+                    </div>
+                <% } %>
+            </div>
         </div>
-    </div> 
-    </div> 
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
-    <% if(showRegisterForm != null && showRegisterForm === true) { %>
-        <script>
-          $('.register-form').show(); $('.login-form, .form-line').hide();
-        </script>
-    <% } %>
-    <script>
-        $('.message a').click(function(){
-            $('form, .social-buttons, .form-line').animate({height: "toggle", opacity: "toggle"}, "slow");
-          });
-    </script>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script >
-  $(function() {
-    var socket = io.connect();
-  });
-</script>
-  </body>
+    <script>
+        // Переключение между формами
+        function toggleForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (type === 'register') {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+            } else {
+                registerForm.classList.remove('active');
+                loginForm.classList.add('active');
+            }
+        }
+        
+        // Автоматическое переключение на форму регистрации если есть ошибки
+        <% if (showRegisterForm) { %>
+            toggleForm('register');
+        <% } %>
+        
+        // WebSocket подключение
+        $(function() {
+            var socket = io.connect();
+        });
+        
+        // Обработка добавления тестовых данных
+        document.getElementById('addTestDataBtn').addEventListener('click', async function() {
+            const btn = this;
+            const statusDiv = document.getElementById('testDataStatus');
+            
+            // Показываем загрузку
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Добавление...';
+            statusDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch('/add-test-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    let detailsText = '';
+                    if (result.details.users > 0 || result.details.cards > 0 || result.details.posts > 0 || result.details.sensors > 0) {
+                        detailsText += `Добавлено: ${result.details.users} пользователей, ${result.details.cards} карточек, ${result.details.posts} записей датчиков, ${result.details.sensors} датчиков`;
+                    }
+                    if (result.details.existingUsers > 0 || result.details.existingCards > 0 || result.details.existingPosts > 0 || result.details.existingSensors > 0) {
+                        if (detailsText) detailsText += '<br>';
+                        detailsText += `Уже существует: ${result.details.existingUsers} пользователей, ${result.details.existingCards} карточек, ${result.details.existingPosts} записей датчиков, ${result.details.existingSensors} датчиков`;
+                    }
+                    
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success alert-sm">
+                            <i class="fas fa-check-circle me-1"></i>
+                            ${result.message}
+                            <br>
+                            <small>${detailsText}</small>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger alert-sm">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger alert-sm">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Ошибка подключения к серверу
+                    </div>
+                `;
+            }
+            
+            statusDiv.style.display = 'block';
+            
+            // Восстанавливаем кнопку
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-database me-1"></i>Добавить тестовые данные';
+        });
+        
+        // Обработка пересоздания тестовых данных
+        document.getElementById('resetTestDataBtn').addEventListener('click', async function() {
+            if (!confirm('Вы уверены, что хотите пересоздать все тестовые данные? Это удалит все существующие данные и создаст новые.')) {
+                return;
+            }
+            
+            const btn = this;
+            const statusDiv = document.getElementById('testDataStatus');
+            
+            // Показываем загрузку
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Пересоздание...';
+            statusDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch('/reset-test-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success alert-sm">
+                            <i class="fas fa-check-circle me-1"></i>
+                            ${result.message}
+                            <br>
+                            <small>
+                                Создано: ${result.details.users} пользователей, 
+                                ${result.details.cards} карточек, 
+                                ${result.details.posts} записей датчиков,
+                                ${result.details.sensors} датчиков
+                            </small>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger alert-sm">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger alert-sm">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Ошибка подключения к серверу
+                    </div>
+                `;
+            }
+            
+            statusDiv.style.display = 'block';
+            
+            // Восстанавливаем кнопку
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-refresh me-1"></i>Пересоздать данные';
+        });
+    </script>
+</body>
 </html>

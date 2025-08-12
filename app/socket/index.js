@@ -1,239 +1,226 @@
-'use strict';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { MongoClient } from 'mongodb';
+import { config } from '../config/index.js';
+import { logger } from '../logger/index.js';
 
-var config = require('../config');
-var redis = require('redis').createClient;
-var adapter = require('socket.io-redis');
-var mongo = require('mongodb').MongoClient;
-var url = 'mongodb://test:testtest1@ds061246.mlab.com:61246/diplomchik';
+import { models } from '../database/index.js';
 
-
-var User = require('../models/user');
-var Card = require('../models/card');
-var Post = require('../models/post');
-var assert = require('assert');
-
-
-var ioEvents = function (io) {
-    var nsp = io.of('/main');
-    nsp.on('connection', function (socket) {
-        console.log('someone connected');
-        socket.on('disconnect', function () {
-        });
+const ioEvents = (io) => {
+  const nsp = io.of('/main');
+  nsp.on('connection', (socket) => {
+    logger.debug('Пользователь подключился к /main');
+    socket.on('disconnect', () => {
+      logger.debug('Пользователь отключился от /main');
     });
+  });
 
-    var csp = io.of('/card');
-    csp.on('connection', function (socket) {
-        var resultArray = [];
-        var resultArrayDatebirthday = [];
-        var resultArrayDategospital = [];
-        var resultArrayDatchik = [];
-        var resultArrayHistory = [];
-        var resultArrayDiagnoz = [];
-        var resultDat = [];
-        var resultDatpulse = [];
-        var resultArray2 = [];
-        var resultArrayDatebirthday2 = [];
-        var resultArrayDategospital2 = [];
-        var resultArrayDatchik2 = [];
-        var resultArrayHistory2 = [];
-        var resultArrayDiagnoz2 = [];
-        var resultDat2 = [];
-        var resultDat2pulse = [];
+  const csp = io.of('/card');
+  csp.on('connection', (socket) => {
+    logger.debug('Пользователь подключился к /card');
+    
+    // Кэш для хранения предыдущих данных
+    let previousData = {
+      cards: null,
+      sensors: null
+    };
+    
+    // Функция для сравнения данных
+    const hasDataChanged = (newData, oldData) => {
+      if (!oldData) return true;
+      return JSON.stringify(newData) !== JSON.stringify(oldData);
+    };
 
+    // Функция для получения и отправки данных
+    const fetchAndSendData = async () => {
+      try {
+        const client = new MongoClient(config.mongodb.uri);
+        await client.connect();
+        
+        const db = client.db();
+        
+        // Получаем все карточки пациентов
+        const cards = await db.collection('cards').find({}).toArray();
+        
+        // Получаем все данные датчиков
+        const sensors = await db.collection('posts').find({}).toArray();
+        
+        await client.close();
 
-        var timer = setInterval(function () {
-            mongo.connect(url, function (err, db) {
-                var cursor = db.collection('cards').find({Datchik: 1});
-                assert.equal(null, err);
+        // Проверяем изменения данных
+        const cardsChanged = hasDataChanged(cards, previousData.cards);
+        const sensorsChanged = hasDataChanged(sensors, previousData.sensors);
 
-                var Dathiki = db.collection('posts').find({ids: 1});
-                assert.equal(null, err);
+        // Обновляем кэш
+        previousData.cards = cards;
+        previousData.sensors = sensors;
 
-                var cursor2 = db.collection('cards').find({Datchik: 2});
-                assert.equal(null, err);
+        // Отправляем данные только если они изменились
+        if (cardsChanged || sensorsChanged) {
+          socket.emit('patientsData', { cards, sensors });
+        }
+      } catch (error) {
+        logger.error('Ошибка в Socket.io:', error);
+      }
+    };
 
-                var Dathiki2 = db.collection('posts').find({ids: 2}, {_id: false, ids: false, __v: false});
-                assert.equal(null, err);
+    // Сразу загружаем данные при подключении
+    fetchAndSendData();
 
-                cursor.forEach(function (doc, err) {
-                    assert.equal(null, err);
-                    resultArray = (doc.FIO);
-                    resultArrayDatebirthday = (doc.Datebirthday);
-                    resultArrayDategospital = (doc.Dategospital);
-                    resultArrayDatchik = (doc.Datchik);
-                    resultArrayHistory = (doc.History);
-                    resultArrayDiagnoz = (doc.Diagnoz);
-                });
+    // Затем запускаем цикл обновлений
+    const timer = setInterval(fetchAndSendData, 3000);
 
-                cursor2.forEach(function (doc, err) {
-                    assert.equal(null, err);
-                    resultArray2 = (doc.FIO);
-                    resultArrayDatebirthday2 = (doc.Datebirthday);
-                    resultArrayDategospital2 = (doc.Dategospital);
-                    resultArrayDatchik2 = (doc.Datchik);
-                    resultArrayHistory2 = (doc.History);
-                    resultArrayDiagnoz2 = (doc.Diagnoz);
-                });
-
-                Dathiki.forEach(function (doc, err) {
-                    assert.equal(null, err);
-                    resultDat = (doc.temp1);
-                    resultDatpulse = (doc.pulse)
-                });
-
-                Dathiki2.forEach(function (doc, err) {
-                    assert.equal(null, err);
-                    resultDat2 = (doc.temp1);
-                    resultDat2pulse = (doc.pulse);
-                }, function () {
-                    db.close();
-                });
-            });
-
-            if (resultArrayDatchik == 1) {
-                var datas4 =
-                    '<div class="col">' +
-                    '<div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">' +
-                    '<div class="card" style="border-radius: 15px; margin-bottom: 50px;">' +
-                    '<div class="card-body">' +
-                    '<img src="https://st.depositphotos.com/1008939/1880/i/450/depositphotos_18807295-stock-photo-portrait-of-handsome-man.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">' +
-                    '<button type="button"  data-toggle="modal" data-target="#exampleModal4" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px; margin-top: 1.5rem; display: flex; align-items: center">' +
-                    'Открыть карточку пациента ' + resultArray +
-                    '</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-            } else {
-                var datas4 = '<div></div>';
-            }
-
-            socket.emit('carto', datas4);
-
-
-            var datas5 =
-                '<div class="modal-dialog" role="document">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<h5 style="margin-top: 30px;">ФИО: ' + resultArray + '</h5>' +
-                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                '<span aria-hidden="true">&times;</span>' +
-                '</button>' +
-                '</div>' +
-                '<div class="modal-body">' +
-                '<section class="get">' +
-                '<article class="items" style="">' +
-                '<div  style="color:Black;">ФИО: ' + resultArray + '</div>' +
-                '<div  style="color:Black;">Дата рождения: ' + resultArrayDatebirthday + '</div>' +
-                '<div  style="color:Black;">Дата госпитализации: ' + resultArrayDategospital + '</div>' +
-                '<div  style="color:Black;">Номер датчика: ' + resultArrayDatchik + '</div>' +
-                '<div  style="color:Black;">История болезни: ' + resultArrayHistory + '</div>' +
-                '<div  style="color:Black;">Диагноз: ' + resultArrayDiagnoz + '</div>' +
-                '<br>' +
-                '</article>' +
-                '<article class="good" style="align-self: left;">' +
-                '<div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: ' + resultDat2 + '</div>' +
-                '<div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: ' + resultDat2pulse + '</div>' +
-                '</article>' +
-                '</section>' +
-                '<div>' +
-                '<canvas id="myChart4"></canvas>' +
-                '</div>' +
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-            socket.emit('cartomodal', datas5);
-
-            if (resultArrayDatchik2 == 2) {
-                var datas =
-                    '<div class="col">' +
-                    '<div class="h-50 d-inline-block" style=" background-color: rgba(0,0,255,.1)">' +
-                    '<div class="card" style="border-radius: 15px; margin-bottom: 50px;">' +
-                    '<div class="card-body">' +
-                    '<img src="https://st.depositphotos.com/1424188/1365/i/450/depositphotos_13653328-stock-photo-handsome-caucasian-man-blue-eyes.jpg" width="100%" height="100%" alt="..." style="border-radius: 15px;">' +
-                    '<button type="button"  data-toggle="modal" data-target="#exampleModal3" style="border: 10px; border-color: rgb(128,137,158); border-radius: 15px; margin-top: 1.5rem;display: flex; align-items: center">' +
-                    'Открыть карточку пациента ' + resultArray2 +
-                    '</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-            } else {
-                var datas = '';
-            }
-
-            socket.emit('carto2', datas);
-
-            var datas1 =
-                '<div class="modal-dialog" role="document">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<h5 style="margin-top: 30px;">ФИО: ' + resultArray2 + '</h5>' +
-                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                '<span aria-hidden="true">&times;</span>' +
-                '</button>' +
-                '</div>' +
-                '<div class="modal-body">' +
-                '<section class="get">' +
-                '<article class="items" style="">' +
-                '<div  style="color:Black;">ФИО: ' + resultArray2 + '</div>' +
-                '<div  style="color:Black;">Дата рождения: ' + resultArrayDatebirthday2 + '</div>' +
-                '<div  style="color:Black;">Дата госпитализации: ' + resultArrayDategospital2 + '</div>' +
-                '<div  style="color:Black;">Номер датчика: ' + resultArrayDatchik2 + '</div>' +
-                '<div  style="color:Black;">История болезни: ' + resultArrayHistory2 + '</div>' +
-                '<div  style="color:Black;">Диагноз: ' + resultArrayDiagnoz2 + '</div>' +
-                '<br>' +
-                '</article>' +
-                '<article class="good" style="align-self: left;">' +
-                '<div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Температура: ' + resultDat + '</div>' +
-                '<div class="alert alert-success" style="color:Black; margin-top: -16px;  margin-right: 3px;">Пульс: ' + resultDatpulse + '</div>' +
-                '</article>' +
-                '</section>' +
-                '<div>' +
-                '<canvas id="myChart4"></canvas>' +
-                '</div>' +
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-            socket.emit('cartomodal2', datas1);
-        }, 500);
-
-        console.log('connected to card');
-        socket.on('disconnect', function () {
-        });
+    socket.on('disconnect', () => {
+      clearInterval(timer);
+      logger.debug('Пользователь отключился от /card');
     });
+  });
+
+  // Страница управления датчиками
+  const ssp = io.of('/sensors');
+  ssp.on('connection', (socket) => {
+    logger.debug('Пользователь подключился к /sensors');
+    
+    // Кэш для хранения предыдущих данных
+    let previousSensorsData = null;
+    
+    // Функция для сравнения данных
+    const hasDataChanged = (newData, oldData) => {
+      if (!oldData) return true;
+      return JSON.stringify(newData) !== JSON.stringify(oldData);
+    };
+
+    // Функция для получения и отправки данных датчиков
+    const fetchAndSendSensorsData = async () => {
+      try {
+        const client = new MongoClient(config.mongodb.uri);
+        await client.connect();
+        
+        const db = client.db();
+        
+        // Получаем все данные датчиков
+        const sensors = await db.collection('posts').find({}).toArray();
+        
+        await client.close();
+
+        // Проверяем изменения данных
+        const sensorsChanged = hasDataChanged(sensors, previousSensorsData);
+
+        // Обновляем кэш
+        previousSensorsData = sensors;
+
+        // Отправляем данные только если они изменились
+        if (sensorsChanged) {
+          socket.emit('sensorsData', { sensors });
+        }
+      } catch (error) {
+        logger.error('Ошибка в Socket.io датчиков:', error);
+      }
+    };
+
+    // Сразу загружаем данные при подключении
+    fetchAndSendSensorsData();
+
+    // Затем запускаем цикл обновлений
+    const timer = setInterval(fetchAndSendSensorsData, 3000);
+
+    socket.on('disconnect', () => {
+      clearInterval(timer);
+      logger.debug('Пользователь отключился от /sensors');
+    });
+  });
+
+  // Страница работников
+  const wsp = io.of('/worker');
+  wsp.on('connection', (socket) => {
+    logger.debug('Пользователь подключился к /worker');
+    
+    // Кэш для хранения предыдущих данных
+    let previousWorkersData = null;
+    
+    // Функция для сравнения данных
+    const hasDataChanged = (newData, oldData) => {
+      if (!oldData) return true;
+      return JSON.stringify(newData) !== JSON.stringify(oldData);
+    };
+
+    // Функция для получения и отправки данных работников
+    const fetchAndSendWorkersData = async () => {
+      try {
+        const client = new MongoClient(config.mongodb.uri);
+        await client.connect();
+        
+        const db = client.db();
+        
+        // Получаем всех работников
+        const workers = await db.collection('users').find({}).toArray();
+        
+        await client.close();
+
+        // Проверяем изменения данных
+        const workersChanged = hasDataChanged(workers, previousWorkersData);
+
+        // Обновляем кэш
+        previousWorkersData = workers;
+
+        // Отправляем данные только если они изменились
+        if (workersChanged) {
+          socket.emit('workersData', { workers });
+        }
+      } catch (error) {
+        logger.error('Ошибка в Socket.io работников:', error);
+      }
+    };
+
+                  // Сразу загружаем данные при подключении
+              fetchAndSendWorkersData();
+            
+              // Затем запускаем цикл обновлений
+              const timer = setInterval(fetchAndSendWorkersData, 3000);
+              
+              // Обработка запроса на обновление данных
+              socket.on('requestWorkersData', () => {
+                fetchAndSendWorkersData();
+              });
+
+    socket.on('disconnect', () => {
+      clearInterval(timer);
+      logger.debug('Пользователь отключился от /worker');
+    });
+  });
 };
 
+const init = (app) => {
+  const server = createServer(app);
+  const io = new Server(server);
 
-var init = function (app) {
-    var server = require('http').Server(app);
-    var io = require('socket.io')(server);
-
-
-    // Using Redis
-    let port = config.redis.port;
-    let host = config.redis.host;
-    let password = config.redis.password;
-    let pubClient = redis(port, host, {auth_pass: password});
-    let subClient = redis(port, host, {auth_pass: password, return_buffers: true,});
-    io.adapter(adapter({pubClient, subClient}));
-
-    // Allow sockets to access session data
-    io.use((socket, next) => {
-        require('../session')(socket.request, {}, next);
+  // Настройка Redis адаптера
+  if (config.redis.host !== 'localhost') {
+    const pubClient = createClient({
+      url: `redis://${config.redis.host}:${config.redis.port}`,
+      password: config.redis.password
     });
+    const subClient = pubClient.duplicate();
+    
+    io.adapter(createAdapter(pubClient, subClient));
+    
+    pubClient.connect();
+    subClient.connect();
+  }
 
-    // Define all Events
-    ioEvents(io);
+  // Разрешаем доступ к сессиям
+  io.use((socket, next) => {
+    import('../session/index.js').then(sessionModule => {
+      sessionModule.default(socket.request, {}, next);
+    });
+  });
 
-    // The server object will be then used to list to a port number
-    return server;
+  // Определяем события
+  ioEvents(io);
+
+  return server;
 };
 
-module.exports = init;
+export default init;

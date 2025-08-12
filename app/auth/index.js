@@ -1,50 +1,39 @@
-'use strict';
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import { models } from '../database/index.js';
 
-var config 		= require('../config');
-var passport 	= require('passport');
-var logger 		= require('../logger');
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
 
-var LocalStrategy 		= require('passport-local').Strategy;
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await models.user.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
 
-var User = require('../models/user');
+passport.use(new LocalStrategy(async (username, password, done) => {
+  try {
+    const user = await models.user.findOne({ 
+      username: new RegExp('^' + username + '$', 'i') 
+    });
+    
+    if (!user) {
+      return done(null, false, { message: 'Неверное имя пользователя.' });
+    }
+    
+    const isValidPassword = await user.validatePassword(password);
+    if (!isValidPassword) {
+      return done(null, false, { message: 'Неверный пароль.' });
+    }
+    
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}));
 
-
-var init = function(){
-
-	
-	passport.serializeUser(function(user, done) {
-		done(null, user.id);
-	});
-
-	passport.deserializeUser(function(id, done) {
-		User.findById(id, function (err, user) {
-			done(err, user);
-		});
-	});
-
-	
-	passport.use(new LocalStrategy(
-	  function(username, password, done) {
-	    User.findOne({ username: new RegExp(username, 'i')}, function(err, user) {
-	      if (err) { return done(err); }
-
-	      if (!user) {
-	        return done(null, false, { message: 'Неправильное имя пользователя или пароль.' });
-	      }
-
-	      user.validatePassword(password, function(err, isMatch) {
-	        	if (err) { return done(err); }
-	        	if (!isMatch){
-	        		return done(null, false, { message: 'Неправильное имя пользователя или пароль.' });
-	        	}
-	        	return done(null, user);
-	      });
-
-	    });
-	  }
-	));
-
-	return passport;
-}
-	
-module.exports = init();
+export default passport;

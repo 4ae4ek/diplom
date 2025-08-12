@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "app/",
+    "server.js"
+  ],
+  "ext": "js,json,ejs,hbs",
+  "ignore": [
+    "node_modules/",
+    "logs/",
+    "*.log"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": "1000"
+}

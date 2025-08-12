@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioMark - Карточки пациентов</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo:hover {
+            color: #764ba2;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .dropdown {
+            position: relative;
+            z-index: 9999;
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .nav-link.logout {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+        }
+        
+        .nav-link.logout:hover {
+            background: linear-gradient(135deg, #c82333 0%, #e55a00 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        /* Dropdown Menu */
+        .dropdown-menu {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 2px 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        /* Content */
+        .content {
+            padding: 40px 20px;
+            min-height: calc(100vh - 80px);
+            margin-top: 100px;
+        }
+        
+        .patients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Patient Card */
+        .patient-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .patient-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .patient-photo {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .avatar-icon {
+            font-size: 100px !important;
+            color: #667eea !important;
+            opacity: 0.7;
+        }
+        
+        .patient-info {
+            padding: 25px;
+        }
+        
+        .patient-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .patient-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .status-text {
+            color: #28a745;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .patient-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .patient-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-view {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-graph {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-graph:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Modal */
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            border: none;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .btn-close {
+            filter: invert(1);
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .patient-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .detail-card h6 {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .detail-card p {
+            color: #333;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        .vital-signs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .vital-sign {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .vital-sign h5 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .vital-sign .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        /* Form Styles */
+        .form-floating {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .patients-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .vital-signs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/main" class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    BioMark
+                </a>
+                
+                <nav class="nav-menu">
+                    <a href="/worker" class="nav-link">
+                        <i class="fas fa-users me-1"></i>Работники
+                    </a>
+                    <a href="/card" class="nav-link active">
+                        <i class="fas fa-id-card me-1"></i>Пациенты
+                    </a>
+                    <a href="/sensors" class="nav-link">
+                        <i class="fas fa-microchip me-1"></i>Датчики
+                    </a>
+                    <a href="/logout" class="nav-link logout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                    </a>
+                </nav>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog me-1"></i>Действия
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                                <i class="fas fa-user-plus me-2"></i>Добавить пациента
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#supportModal">
+                                <i class="fas fa-headset me-2"></i>Служба поддержки
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+        <div class="container">
+            <div class="patients-grid" id="patientsContainer">
+                <!-- Пациенты будут загружены через Socket.io -->
+                <div class="empty-state">
+                    <i class="fas fa-user-injured"></i>
+                    <h3>Нет активных пациентов</h3>
+                    <p>Добавьте пациента, чтобы начать мониторинг</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>Добавить пациента
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="addPatientForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="patientFIO" name="FIO" placeholder="ФИО" required>
+                                    <label for="patientFIO">
+                                        <i class="fas fa-user me-2"></i>ФИО
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-control" id="patientSensor" name="Datchik" required>
+                                        <option value="">Выберите датчик</option>
+                                        <option value="1">Датчик №1</option>
+                                        <option value="2">Датчик №2</option>
+                                    </select>
+                                    <label for="patientSensor">
+                                        <i class="fas fa-microchip me-2"></i>Номер датчика
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="patientBirthday" name="Datebirthday">
+                                    <label for="patientBirthday">
+                                        <i class="fas fa-birthday-cake me-2"></i>Дата рождения
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="patientHospital" name="Dategospital">
+                                    <label for="patientHospital">
+                                        <i class="fas fa-hospital me-2"></i>Дата госпитализации
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <textarea class="form-control" id="patientHistory" name="History" placeholder="История болезни" style="height: 100px"></textarea>
+                            <label for="patientHistory">
+                                <i class="fas fa-notes-medical me-2"></i>История болезни
+                            </label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <textarea class="form-control" id="patientDiagnosis" name="Diagnoz" placeholder="Диагноз" style="height: 100px"></textarea>
+                            <label for="patientDiagnosis">
+                                <i class="fas fa-stethoscope me-2"></i>Диагноз
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>Отмена
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Modal -->
+    <div class="modal fade" id="chartModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-chart-line me-2"></i>График показателей пациента
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <h6 class="mb-3" id="chartTitle">График показателей</h6>
+                        <canvas id="sensorChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal fade" id="supportModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-headset me-2"></i>Служба поддержки
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" action="/mail">
+                    <div class="modal-body">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="supportFIO" name="FIOmail" placeholder="ФИО" required>
+                            <label for="supportFIO">
+                                <i class="fas fa-user me-2"></i>ФИО
+                            </label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="supportEmail" name="mail" placeholder="Email" required>
+                            <label for="supportEmail">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="supportTheme" name="theme" placeholder="Тема обращения" required>
+                            <label for="supportTheme">
+                                <i class="fas fa-tag me-2"></i>Тема обращения
+                            </label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <textarea class="form-control" id="supportMessage" name="gltext" placeholder="Описание проблемы" style="height: 120px" required></textarea>
+                            <label for="supportMessage">
+                                <i class="fas fa-comment me-2"></i>Описание проблемы
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="supportAgreement" required>
+                            <label class="form-check-label" for="supportAgreement">
+                                Я соглашаюсь на обработку своих данных
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>Отмена
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i>Отправить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div class="modal fade" id="patientDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user me-2"></i>Карточка пациента
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="patientDetailContent">
+                    <!-- Содержимое будет загружено через Socket.io -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+        // Socket.io подключение
+        const socket = io('/card');
+        
+        // Обработка данных пациентов
+        socket.on('patientsData', function (data) {
+            updatePatientsDisplay(data.cards, data.sensors);
+        });
+        
+        // Функция обновления отображения пациентов
+        function updatePatientsDisplay(cards, sensors) {
+            const container = document.getElementById('patientsContainer');
+            
+            if (!cards || cards.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-injured"></i>
+                        <h3>Нет активных пациентов</h3>
+                        <p>Добавьте пациента, чтобы начать мониторинг</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let patientsHTML = '';
+            
+            cards.forEach(card => {
+                // Находим соответствующие данные датчика
+                const sensor = sensors.find(s => s.ids === card.Datchik);
+                
+                patientsHTML += `
+                    <div class="patient-card">
+                        <div class="patient-photo">
+                            <i class="fas fa-user-circle avatar-icon" style="font-size: 100px; color: #667eea;"></i>
+                        </div>
+                        <div class="patient-info">
+                            <div class="patient-name">${card.FIO || 'Не указано'}</div>
+                            <div class="patient-status">
+                                <div class="status-indicator"></div>
+                                <span class="status-text">Активен</span>
+                            </div>
+                            <div class="patient-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Датчик</span>
+                                    <span class="detail-value">№${card.Datchik}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Температура</span>
+                                    <span class="detail-value">${sensor ? sensor.temp1 + '°C' : 'Нет данных'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Пульс</span>
+                                    <span class="detail-value">${sensor ? sensor.pulse + ' уд/мин' : 'Нет данных'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Диагноз</span>
+                                    <span class="detail-value">${card.Diagnoz || 'Не указан'}</span>
+                                </div>
+                            </div>
+                            <div class="patient-actions">
+                                <button type="button" class="btn-view" onclick="showPatientDetails('${card._id}', '${card.FIO}', '${card.Datebirthday}', '${card.Dategospital}', '${card.Datchik}', '${card.History}', '${card.Diagnoz}', '${sensor ? sensor.temp1 : ''}', '${sensor ? sensor.pulse : ''}')">
+                                    <i class="fas fa-eye me-1"></i>Подробнее
+                                </button>
+                                <button type="button" class="btn-graph" onclick="showSensorGraph('${card.Datchik}', '${card.FIO}')">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = patientsHTML;
+        }
+        
+        // Функция показа деталей пациента
+        function showPatientDetails(id, fio, birthday, hospital, sensor, history, diagnosis, temp, pulse) {
+            const modalContent = `
+                <div class="patient-detail-grid">
+                    <div class="detail-card">
+                        <h6><i class="fas fa-user me-2"></i>ФИО</h6>
+                        <p>${fio || 'Не указано'}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-birthday-cake me-2"></i>Дата рождения</h6>
+                        <p>${birthday || 'Не указана'}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-hospital me-2"></i>Дата госпитализации</h6>
+                        <p>${hospital || 'Не указана'}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-microchip me-2"></i>Номер датчика</h6>
+                        <p>№${sensor}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-notes-medical me-2"></i>История болезни</h6>
+                        <p>${history || 'Не указана'}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-stethoscope me-2"></i>Диагноз</h6>
+                        <p>${diagnosis || 'Не указан'}</p>
+                    </div>
+                </div>
+                
+                <div class="vital-signs">
+                    <div class="vital-sign">
+                        <h5><i class="fas fa-thermometer-half me-2"></i>Температура</h5>
+                        <div class="value">${temp ? temp + '°C' : 'Нет данных'}</div>
+                    </div>
+                    <div class="vital-sign">
+                        <h5><i class="fas fa-heartbeat me-2"></i>Пульс</h5>
+                        <div class="value">${pulse ? pulse + ' уд/мин' : 'Нет данных'}</div>
+                    </div>
+                </div>
+                
+
+            `;
+            
+            document.getElementById('patientDetailContent').innerHTML = modalContent;
+            
+            // Показываем модальное окно
+            const modal = new bootstrap.Modal(document.getElementById('patientDetailModal'));
+            modal.show();
+        }
+        
+
+        
+        // Функция показа графика датчика
+        function showSensorGraph(sensorId, patientName) {
+            // Обновляем заголовок графика
+            document.getElementById('chartTitle').textContent = `График показателей пациента ${patientName} (Датчик №${sensorId})`;
+            
+            // Показываем модальное окно
+            const modal = new bootstrap.Modal(document.getElementById('chartModal'));
+            modal.show();
+            
+            // Создаем график после показа модального окна
+            setTimeout(() => {
+                createSensorChart(sensorId);
+            }, 100);
+        }
+        
+        // Обработчик формы добавления пациента
+        const addPatientForm = document.getElementById('addPatientForm');
+        if (addPatientForm) {
+            addPatientForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const patientData = {
+                    FIO: formData.get('FIO'),
+                    Datebirthday: formData.get('Datebirthday'),
+                    Dategospital: formData.get('Dategospital'),
+                    Datchik: formData.get('Datchik'),
+                    History: formData.get('History'),
+                    Diagnoz: formData.get('Diagnoz')
+                };
+                
+                try {
+                    const response = await fetch('/card', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(patientData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('Пациент успешно добавлен!');
+                        // Закрываем модальное окно
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addPatientModal'));
+                        modal.hide();
+                        // Очищаем форму
+                        this.reset();
+                        // Обновляем данные
+                        socket.emit('requestPatientsData');
+                    } else {
+                        alert('Ошибка добавления пациента: ' + result.error);
+                    }
+                } catch (error) {
+                    console.error('Ошибка добавления пациента:', error);
+                    alert('Ошибка добавления пациента');
+                }
+            });
+        }
+
+        // Функция создания графика датчика
+        function createSensorChart(sensorId) {
+            const ctx = document.getElementById('sensorChart');
+            if (!ctx) return;
+            
+            // Генерируем тестовые данные для графика (50 показаний)
+            const labels = [];
+            const temperatureData = [];
+            const pulseData = [];
+            
+            const now = new Date();
+            for (let i = 49; i >= 0; i--) {
+                const time = new Date(now.getTime() - i * 30 * 60 * 1000); // каждые 30 минут
+                labels.push(time.getHours().toString().padStart(2, '0') + ':' + time.getMinutes().toString().padStart(2, '0'));
+                
+                // Генерируем реалистичные данные
+                const baseTemp = 36.6 + (Math.random() - 0.5) * 2; // 35.6 - 37.6
+                const basePulse = 70 + (Math.random() - 0.5) * 20; // 60 - 80
+                
+                temperatureData.push(baseTemp.toFixed(1));
+                pulseData.push(Math.round(basePulse));
+            }
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Температура (°C)',
+                            data: temperatureData,
+                            borderColor: '#dc3545',
+                            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Пульс (уд/мин)',
+                            data: pulseData,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Время'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Температура (°C)'
+                            },
+                            min: 35,
+                            max: 40
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Пульс (уд/мин)'
+                            },
+                            min: 50,
+                            max: 120,
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Данные датчика №${sensorId} за последние 25 часов`
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

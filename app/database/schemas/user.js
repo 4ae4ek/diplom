@@ -1,46 +1,64 @@
-'use strict';
-
-var Mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const SALT_WORK_FACTOR = 12;
 const DEFAULT_USER_PICTURE = "https://st2.depositphotos.com/5266903/8486/v/450/depositphotos_84867024-stock-illustration-surgeon-icon.jpg";
 
-
-var UserSchema = new Mongoose.Schema({
-    username: {type: String, required: true},
-    password: {type: String, default: null},
-    picture: {type: String, default: DEFAULT_USER_PICTURE},
-    FIO: {type: String, default: null},
-    Rang: {type: String, default: null},
+const UserSchema = new mongoose.Schema({
+  username: { 
+    type: String, 
+    required: true,
+    unique: true,
+    trim: true
+  },
+  password: { 
+    type: String, 
+    default: null 
+  },
+  picture: { 
+    type: String, 
+    default: DEFAULT_USER_PICTURE 
+  },
+  FIO: { 
+    type: String, 
+    default: null 
+  },
+  Rang: { 
+    type: String, 
+    default: null 
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
+UserSchema.pre('save', async function(next) {
+  const user = this;
+  
+  if (!user.picture) {
+    user.picture = DEFAULT_USER_PICTURE;
+  }
+  
+  if (!user.isModified('password')) return next();
 
-UserSchema.pre('save', function (next) {
-    var user = this;
-    if (!user.picture) {
-        user.picture = DEFAULT_USER_PICTURE;
-    }
-    if (!user.isModified('password')) return next();
-
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-        if (err) return next(err);
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
-            if (err) return next(err);
-            user.password = hash;
-            next();
-        });
-    });
+  try {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    user.password = await bcrypt.hash(user.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
-
-UserSchema.methods.validatePassword = function (password, callback) {
-    bcrypt.compare(password, this.password, function (err, isMatch) {
-        if (err) return callback(err);
-        callback(null, isMatch);
-    });
+UserSchema.methods.validatePassword = async function(password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (error) {
+    throw error;
+  }
 };
 
-var userModel = Mongoose.model('user', UserSchema);
+const userModel = mongoose.model('user', UserSchema);
 
-module.exports = userModel;
+export default userModel;

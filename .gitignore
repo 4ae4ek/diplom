@@ -1,2 +1,52 @@
-/node_modules/*/node-modules/
-/node_modules/
+# Зависимости
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Переменные окружения
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Логи
+logs/
+*.log
+debug.log
+
+# Временные файлы
+.tmp/
+.temp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+docker/docker-compose.override.yml
+
+# Тестирование
+coverage/
+.nyc_output/
+
+# Сборка
+dist/
+build/
+
+# Другие файлы проекта
+*.bat
+*.pptx
+*.docx
+*.pdf
+eterial.txt
+redis-server.exe

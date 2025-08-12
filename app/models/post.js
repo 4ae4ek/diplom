@@ -1,33 +1,35 @@
-'use strict';
+import { models } from '../database/index.js';
 
-var postModel = require('../database').models.post;
-
-var create = function (data, callback) {
-    var newPost = new postModel(data);
-    newPost.save(callback);
+const create = async (data) => {
+  const newPost = new models.post(data);
+  return await newPost.save();
 };
 
-var findOne = function (data, callback) {
-    postModel.findOne(data, callback);
+const findOne = async (data) => {
+  return await models.post.findOne(data);
 };
 
-var findById = function (id, callback) {
-    postModel.findById(id, callback);
+const findById = async (id) => {
+  return await models.post.findById(id);
 };
 
-var findOneAndUpdate = function (ids, data, callback) {
-    postModel.findOneAndUpdate(ids, data, {new: true}, callback);
+const findOneAndUpdate = async (ids, data) => {
+  return await models.post.findOneAndUpdate(ids, data, { new: true });
 };
 
-var find = function (data, callback) {
-    postModel.find(data, callback);
+const find = async (data) => {
+  return await models.post.find(data);
 };
 
+const findBySensorId = async (sensorId) => {
+  return await models.post.findOne({ ids: sensorId });
+};
 
-module.exports = {
-    create,
-    findOne,
-    findById,
-    findOneAndUpdate,
-    find
+export {
+  create,
+  findOne,
+  findById,
+  findOneAndUpdate,
+  find,
+  findBySensorId
 };

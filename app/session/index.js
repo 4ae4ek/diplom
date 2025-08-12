@@ -1,28 +1,16 @@
-'use strict';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import { config } from '../config/index.js';
 
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var db = require('../database');
-var config = require('../config');
+const sessionConfig = session({
+  secret: config.session.secret,
+  resave: config.session.resave,
+  saveUninitialized: config.session.saveUninitialized,
+  cookie: config.session.cookie,
+  store: MongoStore.create({
+    mongoUrl: config.mongodb.uri,
+    ttl: 24 * 60 * 60 // 24 часа
+  })
+});
 
-
-var init = function () {
-    if (process.env.NODE_ENV === 'production') {
-        return session({
-            secret: "asfjaip",
-            resave: false,
-            saveUninitialized: false,
-            unset: 'destroy',
-            store: new MongoStore({mongooseConnection: db.Mongoose.connection})
-        });
-    } else {
-        return session({
-            secret: "asfjaip",
-            resave: false,
-            unset: 'destroy',
-            saveUninitialized: true
-        });
-    }
-}
-
-module.exports = init();
+export default sessionConfig;

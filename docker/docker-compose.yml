@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Node.js debug port
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/biomark
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - SESSION_SECRET=dev-session-secret-key
+      - EMAIL_HOST=smtp.ethereal.email
+      - EMAIL_PORT=587
+      - EMAIL_USER=janelle.schoen76@ethereal.email
+      - EMAIL_PASS=n6efe7PaHucwUQ6aMu
+      - LOG_LEVEL=info
+    volumes:
+      - ..:/app
+      - /app/node_modules
+      - ../public/uploads:/app/public/uploads
+    depends_on:
+      - mongo
+      - redis
+    restart: unless-stopped
+    networks:
+      - biomark-network
+    command: npm run dev
+
+  app-prod:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/biomark
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - SESSION_SECRET=your-super-secret-session-key
+      - EMAIL_HOST=smtp.ethereal.email
+      - EMAIL_PORT=587
+      - EMAIL_USER=janelle.schoen76@ethereal.email
+      - EMAIL_PASS=n6efe7PaHucwUQ6aMu
+    depends_on:
+      - mongo
+      - redis
+    restart: unless-stopped
+    networks:
+      - biomark-network
+    profiles:
+      - production
+
+  mongo:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=biomark
+    volumes:
+      - mongo_data:/data/db
+      - ../scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    restart: unless-stopped
+    networks:
+      - biomark-network
+    command: mongod --quiet --logpath /dev/null
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - biomark-network
+
+  mongo-express:
+    image: mongo-express:1.0.0
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    networks:
+      - biomark-network
+    profiles:
+      - tools
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8082:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - biomark-network
+    profiles:
+      - tools
+
+volumes:
+  mongo_data:
+  redis_data:
+
+networks:
+  biomark-network:
+    driver: bridge

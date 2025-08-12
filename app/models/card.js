@@ -1,27 +1,34 @@
-'use strict';
+import { models } from '../database/index.js';
 
-var cardModel = require('../database').models.card;
-
-var create = function (data, callback) {
-    var newCard = new cardModel(data);
-    newCard.save(callback);
+const create = async (data) => {
+  const newCard = new models.card(data);
+  return await newCard.save();
 };
 
-var findOne = function (data, callback) {
-    cardModel.findOne(data, callback);
+const findOne = async (data) => {
+  return await models.card.findOne(data);
 };
 
-var findByDatchik = function (Datchik, callback) {
-    cardModel.findByDatchik(Datchik, callback);
+const findByDatchik = async (datchik) => {
+  return await models.card.findOne({ Datchik: datchik });
 };
 
-var findByFIOAndUpdate = function (FIO, data, callback) {
-    cardModel.findByFIOAndUpdate(FIO, data, {new: true}, callback);
+const findByFIOAndUpdate = async (fio, data) => {
+  return await models.card.findOneAndUpdate(
+    { FIO: new RegExp('^' + fio + '$', 'i') }, 
+    data, 
+    { new: true }
+  );
 };
 
-module.exports = {
-    create,
-    findOne,
-    findByDatchik,
-    findByFIOAndUpdate
+const findAll = async () => {
+  return await models.card.find({}).sort({ createdAt: -1 });
+};
+
+export {
+  create,
+  findOne,
+  findByDatchik,
+  findByFIOAndUpdate,
+  findAll
 };
